@@ -1,20 +1,34 @@
-(ns fixturex.higher)
+(ns fixturex.higher
+  "This namespace contains a few macros for making it a bit easier to define
+  common fixtures. Typically a fixture is meant to do setup, tear down, or wrap
+  around to add some context. The before, after and around macros do these
+  things.")
 
-(defmacro around [& body] `(fn [f#] (~@body (f#))))
-(defmacro ^:private before-and-after-core [before after]
+(defmacro befores-and-afters [before after]
   `(fn [f#]
      ~@before
      (f#)
      ~@after))
 
-(defmacro before [& body] `(before-and-after-core ~body nil))
-(defmacro after [& body] `(before-and-after-core nil ~body))
+(defmacro before
+  "Create a fixture which executes the body before the passed in fixture is
+  invoked."
+  [& body]
+  `(befores-and-afters ~body nil))
+
+(defmacro after
+  "Create a fixture which executes the body after the passed in fixture is
+  invoked."
+  [& body]
+  `(befores-and-afters nil ~body))
 
 (defmacro before-and-after
+  "Create a fixture with a single before and after expression."
   [before after]
-  `(before-and-after-core (~before) (~after)))
+  `(befores-and-afters (~before) (~after)))
 
-; (before (println "ABC"))
-; (after (println "ZXY") :hey)
-; (before-and-after (println "Derp") (println "HEY"))
-; (around println)
+(defmacro around
+  "Create a fixture function which executes the body around the invoked
+  fixture."
+  [& body]
+  `(fn [f#] (~@body (f#))))

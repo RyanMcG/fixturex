@@ -4,22 +4,33 @@
             [fixturex.core :refer :all]))
 
 (declare ^:dynamic *dvar*)
-(defn bind-dvar-to-fixturer [v] (around binding [*dvar* v]))
+(defn bind-dvar-fixturer [v] (around binding [*dvar* v]))
+(def bind-dvar-to-var (bind-dvar-fixturer :var))
 
-(deftest-fx test-foo1 [(bind-dvar-to-fixturer :var)]
+(deftest test-with-fixtures-fn
+  (with-fixtures-fn [bind-dvar-to-var]
+                    (fn [] (is (= *dvar* :var)))))
+
+(deftest test-with-fixtures
+  (with-fixtures [bind-dvar-to-var]
+    (is (= *dvar* :var))))
+
+(deftest-fx test-deftest-fx [bind-dvar-to-var]
   (is (= *dvar* :var))
-  (testing-fx "" [(bind-dvar-to-fixturer :testing)]
+  (testing-fx "" [(bind-dvar-fixturer :testing)]
     (is (= *dvar* :testing))))
 
 (deftest non-fixtured-test (is (= *dvar* :testing-again)))
-(deftest test-foo2
+(deftest test-testing-fx
   (is (thrown? ClassCastException (var-get *dvar*)))
-  (testing-fx "non fixtured" [(bind-dvar-to-fixturer :testing-again)]
+  (testing-fx "non fixtured" [(bind-dvar-fixturer :testing-again)]
     (is (= *dvar* :testing-again))
     (non-fixtured-test)))
 
 (defn test-ns-hook []
-  (test-foo1)
-  (test-foo2))
+  (test-with-fixtures-fn)
+  (test-with-fixtures)
+  (test-deftest-fx)
+  (test-testing-fx))
 
 (run-tests)

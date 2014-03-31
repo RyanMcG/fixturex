@@ -1,10 +1,11 @@
 # fixturex
 
-A Clojure library designed to ... well, that part is up to you.
+A library of helpful test fixture macros and functions.
 
 ## Usage
 
-FIXME
+Hopefully I'll fill this in more soon. Until then, see the [API
+documentation][api].
 
 ## License
 
@@ -12,3 +13,5 @@ Copyright © 2014 Ryan V McGowan
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
+
+[api]: http://www.ryanmcg.com/fixturex/

@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :profiles {:dev {:dependencies [[incise-markdown-parser "0.1.0"]
                                   [com.ryanmcg/incise-codox "0.1.0"]
-                                  [incise-core "0.3.2"]]
+                                  [incise-core "0.3.2"]
+                                  [com.ryanmcg/incise-vm-layout "0.4.0"]]
                    :aliases {"incise" ^:pass-through-help ["run" "-m" "incise.core"]}}})

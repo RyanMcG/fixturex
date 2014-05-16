@@ -2,7 +2,7 @@
   "Some helpful macros for using fixtures. These are particularly helpful when
   defining tests. Often times a fixture should only be used for a subset of
   tests in a namespace or even just a couple of contexts in a few tests.
-  clojure.text/use-fixtures does not operate at this level of granularity."
+  clojure.test/use-fixtures does not operate at this level of granularity."
   (:require [clojure.test :refer [join-fixtures deftest testing]]))
 
 (defn with-fixtures-fn

@@ -14,4 +14,4 @@ Copyright © 2014 Ryan V McGowan
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-[api]: api/
+[api]: http://www.ryanmcg.com/fixturex/api/

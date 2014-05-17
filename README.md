@@ -3,6 +3,11 @@
 A library of helpful test fixture macros and functions for when namespace level
 fixtures with `use-fixtures` is not specific enough.
 
+```clojure
+;; Add the following to dependencies in your project.clj
+[fixturex "0.1.0"]
+```
+
 ## [API documentation][api]
 
 ## Usage

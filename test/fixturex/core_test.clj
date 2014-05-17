@@ -33,4 +33,4 @@
   (test-deftest-fx)
   (test-testing-fx))
 
-(run-tests)
+#_(run-tests)

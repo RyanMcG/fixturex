@@ -43,4 +43,4 @@
       (is (not= @y 3))
       (is (= @y identity)))))
 
-(run-tests)
+#_(run-tests)

@@ -36,4 +36,11 @@
     (is (= *awesome* :yeah!)))
   (is (not (bound? #'*awesome*))))
 
+(deftest test-with
+  (with-fixtures [(with y 3)]
+    (is (= @y 3))
+    (with-fixtures [(with y identity)]
+      (is (not= @y 3))
+      (is (= @y identity)))))
+
 (run-tests)

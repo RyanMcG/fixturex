@@ -1,4 +1,4 @@
-# fixturex
+# fixturex [![Build Status](https://travis-ci.org/RyanMcG/fixturex.svg?branch=master)](https://travis-ci.org/RyanMcG/fixturex)
 
 A library of helpful test fixture macros and functions for when namespace level
 fixtures with `use-fixtures` is not specific enough.

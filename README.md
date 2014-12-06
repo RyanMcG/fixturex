@@ -44,8 +44,8 @@ The `with-fixtures` macro can be use to execute some body of code with a sequenc
                 (with x 1)]
   (do-something conn x)
   (with-fixtures [(with x 2)]
-    (is (= x 2)))
-  (is (= x 1)))
+    (is (= @x 2)))
+  (is (= @x 1)))
 ```
 
 There is also a function version, `with-fixtures-fn`.

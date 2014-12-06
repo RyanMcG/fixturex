@@ -42,5 +42,3 @@
     (with-fixtures [(with y identity)]
       (is (not= @y 3))
       (is (= @y identity)))))
-
-#_(run-tests)

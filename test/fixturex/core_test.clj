@@ -32,5 +32,3 @@
   (test-with-fixtures)
   (test-deftest-fx)
   (test-testing-fx))
-
-#_(run-tests)

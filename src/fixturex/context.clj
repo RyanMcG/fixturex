@@ -1,12 +1,24 @@
 (ns fixturex.context
+  "Various functions for easy dynamic context (e.g. RSpec)."
   (:require [fixturex.higher :refer [around]]
+            [clojure.test :refer [testing deftest]]
             [clojure.walk :refer [postwalk]]))
 
 (declare ^:dynamic *context*)
 
-(defn lookup [k] ((*context* (keyword k))))
-(defn $* [name] `(lookup ~(keyword name)))
-(defmacro $ [name] ($* name))
+(defn lookup
+  "Lookup the thunk at the given key in the context and invoke it if it exists"
+  [k]
+  (let [thunk (*context* k)]
+    (assert thunk (str (name k) " does not exist in context"))
+    (thunk)))
+
+(def ^:private nkw (comp keyword name))
+
+(defn $* [form] `(lookup ~(nkw form)))
+(defmacro $
+  "Lookup the given Named in context."
+  [form] ($* form))
 
 (defn replace-bound-vars-in-body
   "Replace appearances of symbols bound in the current context with lookup
@@ -14,17 +26,19 @@
   [bound-symbols body]
   (postwalk
     (fn replace-bound-vars-in-from [form]
-      (if (symbol? form)
-        (if (bound-symbols form)
-          ($* form)
-          form)
-        form))
+      (cond
+        (symbol? form) (if (contains? bound-symbols (nkw form))
+                         ($* form)
+                         form)
+        :else form))
     body))
 
-(defn symbol-set [maybe-syms] (set (map (comp symbol name) maybe-syms)))
+(def ^:private bound-names-set (comp set (partial map nkw)))
 
-(defmacro scoped [sym-names body]
-  (replace-bound-vars-in-body (symbol-set sym-names) body))
+(defmacro scoped
+  "Replace given bindings with context lookups."
+  [sym-names & body]
+  `(do ~@(replace-bound-vars-in-body (bound-names-set sym-names) body)))
 
 (defn binding-pairs->context
   "Create a context map from a sequence of keyword form pairs.
@@ -32,17 +46,16 @@
   A context map has keyword keys and the values are forms of thunks."
   [bound-symbols binding-pairs]
   {:pre [(every? (comp keyword? first) binding-pairs)]}
-  (->> binding-pairs
-       (map (fn [[k v]]
-              [(keyword k)
-               (list 'fn []
-                     (replace-bound-vars-in-body bound-symbols v))]))
-       (into {})))
+  (into {}
+        (for [[k v] binding-pairs]
+          [k (list 'fn [] (replace-bound-vars-in-body bound-symbols v))])))
 
 (defn- pairs->bound-symbols [binding-pairs]
-  {:post [(set? %)
-          (every? symbol? %)]}
-  (symbol-set (map first binding-pairs)))
+  {:pre [(sequential? binding-pairs)
+         (every? sequential? binding-pairs)]
+   :post [(set? %)
+          (every? keyword? %)]}
+  (bound-names-set (map first binding-pairs)))
 
 (defmacro with-context
   "Define context bindings around the given body."
@@ -64,3 +77,15 @@
   "Create a fixture for adding or modifying bindings in context."
   [& bindings]
   `(around with-context ~(vec bindings)))
+
+(defmacro deftest-ctx
+  "Defines a test just like clojure test, but with the given bindings context
+  around the body."
+  [name bindings & body]
+  `(deftest ~name (with-context ~bindings ~@body)))
+
+(defmacro testing-ctx
+  "Define testing context just like testing but with the given context bindings
+  around the body."
+  [msg bindings & body]
+  `(testing ~msg (with-context ~bindings ~@body)))

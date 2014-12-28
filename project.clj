@@ -13,4 +13,7 @@
                                   [incise-core "0.4.0"]
                                   [com.ryanmcg/incise-vm-layout "0.5.0"]]
                    :plugins [[lein-repack "0.2.4"]]
-                   :aliases {"incise" ^:pass-through-help ["run" "-m" "incise.core"]}}})
+                   :aliases {"incise" ^:pass-through-help ["run" "-m" "incise.core"]}}
+             :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha4"]]}})

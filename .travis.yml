@@ -1,7 +1,10 @@
 language: clojure
 lein: lein2
-script: lein2 test
+script: lein2 with-profile test:1.4:1.5:1.7 test
 jdk:
-  - openjdk7
-  - oraclejdk7
   - openjdk6
+  - openjdk7
+  - openjdk8
+  - oraclejdk6
+  - oraclejdk7
+  - oraclejdk8

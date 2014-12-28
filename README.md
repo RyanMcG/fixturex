@@ -30,7 +30,7 @@ Why am I not introducing the core namespace first?
 (around binding [*x* 1])               ; → (fn [f#] (binding [*x* 1] (f#)))
 (with x 1)                             ; → (fn [f#]
                                        ;     (declare x)
-                                       ;     (with-redefs [x 1] (f#)))
+                                       ;     (with-redefs [x (delay 1)] (f#)))
 ```
 
 ### `with-fixtures`

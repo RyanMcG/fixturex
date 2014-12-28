@@ -45,9 +45,9 @@
   (testing-ctx "hotter ryan" [:ryan 8]
     (is (= 6 pam))
     (is (= 8 ryan))
-    (testing-fx "equally hot pam" [:ryan 9
-                                   :pam ryan]
-      (is (= ryan pam 9)))))
+    (testing-ctx "equally hot pam" [:ryan 9
+                                    :pam ryan]
+      (is (= 9 ryan pam)))))
 
 (deftest-ctx test-lookup [:hey 1]
   (testing "sanity" (is (= hey 1)))

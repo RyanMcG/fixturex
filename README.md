@@ -64,6 +64,36 @@ There is also a function version, `with-fixtures-fn`.
 
 They use `with-fixtures` internally and are just a bit of sugar.
 
+## A note on fixtures
+
+*fixturex* uses the same mechanism for combining fixtures that `clojure.test` does.
+This means that **you** *must be* **careful**.
+It is easy to write a bad fixture and next to impossible to tell if a fixture does not do what the author intended.
+Take the following example:
+
+```clojure
+(require '[clojure.test :refer [is]])
+(require '[fixturex.core :refer [with-fixtures]])
+
+(with-fixtures []
+  (is (= 1 2))) ; → false
+```
+This prints:
+
+    FAIL in ...
+    expected: (= 1 2)
+    actual: (not (= 1 2))
+
+However, if we pass in a fixture which does not invoke its argument:
+```
+(with-fixtures [(fn bad-fx [f] :derp)]
+  (is (= 1 2))) ; → :derp
+```
+Nothing is printed.
+
+If you have something like this in tests it may appear that certain tests are
+passing when in fact they are not being invoked.
+
 ## License
 
 Copyright © 2014 Ryan V McGowan

@@ -17,7 +17,7 @@
 
 (deftest-fx test-deftest-fx [bind-dvar-to-var]
   (is (= *dvar* :var))
-  (testing-fx "" [(bind-dvar-fixturer :testing)]
+  (testing-fx "binding a var with testing-fx" [(bind-dvar-fixturer :testing)]
     (is (= *dvar* :testing))))
 
 (deftest non-fixtured-test (is (= *dvar* :testing-again)))

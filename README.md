@@ -64,6 +64,94 @@ There is also a function version, `with-fixtures-fn`.
 
 They use `with-fixtures` internally and are just a bit of sugar.
 
+## `fixturex.context`
+
+This namespace supports dynamic binding like in RSpec.
+It accomplishes this by providing some functions which merge bindings onto a dynamic var (`*context*`) and by rewriting forms.
+Some totally ridiculous examples follow.
+
+```clojure
+(require [fixturex.context :refer :all])
+```
+
+### `with-context`
+
+This macro merges the given bindings onto the context and rewrites the body so symbols that match keys in the context are lookups.
+
+```clojure
+(with-context [:foo 1
+               :bar (inc foo)]
+  (assert (= bar 2)))
+```
+
+In RSpec this looks like:
+
+```ruby
+context do
+  let(:foo) { 1 }
+  let(:bar) { 2 }
+
+  it { expect(bar).to eq(2) }
+end
+```
+
+#### `testing-ctx`
+
+This is just a shortcut for combining `clojure.test/testing` and `with-context`.
+
+```clojure
+(testing-ctx "description of context" [...bindings...]
+  ...)
+
+(testing "description of context"
+  (with-context [...bindings...]
+    ...))
+```
+
+#### `deftest-ctx`
+
+This is just a shortcut for combining `clojure.test/deftest` and `with-context`.
+
+```clojure
+(deftest-ctx test-something [...bindings...]
+  ...)
+
+(deftest test-something
+  (with-context [...bindings...]
+    ...))
+```
+
+### `where`
+
+Creates a fixture that adds bindings to the context.
+
+```clojure
+(require '[fixturex.core :refer [with-fixtures]])
+(def a-fixture (where :foo 2))
+(with-context [:foo 1]
+  (assert (= foo 1))
+  (with-fixtures [a-fixture]
+    (assert (= foo 2))))
+```
+
+### `$`, `lookup`, and `scoped`
+
+Functions which lookup in the context can be defined outside of where the context is defined.
+There are several methods to lookup.
+
+```clojure
+(defn bar-is-one [] (scoped [bar] (assert (= bar 1))))
+(defn foo-is-two [] (assert (= ($ foo) 2)))
+(defn lol-is-three [] (assert (= (lookup :lol) 3)))
+
+(with-context [:bar 1
+               :foo 2
+               :lol 3]
+  (bar-is-one)
+  (foo-is-two)
+  (lol-is-three))
+```
+
 ## A note on fixtures
 
 *fixturex* uses the same mechanism for combining fixtures that `clojure.test` does.
@@ -85,10 +173,12 @@ This prints:
     actual: (not (= 1 2))
 
 However, if we pass in a fixture which does not invoke its argument:
-```
+
+```clojure
 (with-fixtures [(fn bad-fx [f] :derp)]
   (is (= 1 2))) ; → :derp
 ```
+
 Nothing is printed.
 
 If you have something like this in tests it may appear that certain tests are

@@ -1,6 +1,6 @@
 {:site-title "fixturex"
  :author "Ryan McGowan"
- :parse-defaults {:transformers [:vm-layout]}
+ :parse-defaults {:transformers [:html-header-anchors :vm-layout]}
  :stefon {:asset-roots ["dev-resources/assets"]
           :manifest-file "dev-resources/manifest.json"
           :precompiles ["vm/javascripts/vm.js.stefon"

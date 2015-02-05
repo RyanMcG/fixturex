@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html><head><title>fixturex - index</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css" rel="stylesheet" type="text/css"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css" rel="stylesheet" type="text/css"><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/vm/stylesheets/vm-becf58ee980cbfad6013cf791b1ddc53.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/images/vm.png" rel="icon" type="image/png"></head><body id="page"><div id="content"><article><h1>fixturex <a href="https://travis-ci.org/RyanMcG/fixturex"><img src="https://travis-ci.org/RyanMcG/fixturex.svg?branch=master" alt="Build Status""/></a></h1><p>A library of helpful test fixture macros and functions for when namespace level fixtures with <code>use-fixtures</code> is not specific enough.</p>
+<html><head><title>fixturex - index</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css" rel="stylesheet" type="text/css"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css" rel="stylesheet" type="text/css"><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/vm/stylesheets/vm-81d1007179a88145e1baa110ea15a0c4.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/images/vm.png" rel="icon" type="image/png"></head><body id="page"><div id="content"><article><h1><a class="incise-generated-tag" name="fixturex-" href="#fixturex-"></a>fixturex <a href="https://travis-ci.org/RyanMcG/fixturex"><img _="_" alt="Build Status" src="https://travis-ci.org/RyanMcG/fixturex.svg?branch=master" /></a></h1><p>A library of helpful test fixture macros and functions for when namespace level fixtures with <code>use-fixtures</code> is not specific enough.</p>
 <pre><code class="clojure">;; Add the following to dependencies in your project.clj
-[fixturex &quot;0.1.0&quot;]
-</code></pre><h6><a href="https://github.com/RyanMcG/fixturex"><strong>Source</strong></a></h6><h6><a href="http://www.ryanmcg.com/fixturex/api/"><strong>API Documentation</strong></a></h6><h2>Usage</h2><p><code>fixturex</code> is meant to make using and defining fixtures in tests just a tiny bit easier. It is a very small and simple library of tiny macros.</p><h3><code>fixturex.higher</code></h3><p>Why am I not introducing the core namespace first? <code>fixturex.higher</code> makes it a bit more concise to define fixtures which is necessary to show off the core part of this library.</p>
-<pre><code class="clojure">(use &#39;fixturex.higher)
+[fixturex "0.2.1"]
+</code></pre><h6><a class="incise-generated-tag" name="source" href="#source"></a><a href="https://github.com/RyanMcG/fixturex"><strong>Source</strong></a></h6><h6><a class="incise-generated-tag" name="api-documentation" href="#api-documentation"></a><a href="http://www.ryanmcg.com/fixturex/api/"><strong>API Documentation</strong></a></h6><h2><a class="incise-generated-tag" name="usage" href="#usage"></a>Usage</h2><p><code>fixturex</code> is meant to make using and defining fixtures in tests just a tiny bit easier. It is a very small and simple library of tiny macros.</p><h3><a class="incise-generated-tag" name="fixturex.higher" href="#fixturex.higher"></a><code>fixturex.higher</code></h3><p>Why am I not introducing the core namespace first? <code>fixturex.higher</code> makes it a bit more concise to define fixtures which is necessary to show off the core part of this library.</p>
+<pre><code class="clojure">(use 'fixturex.higher)
 (before (setup))                       ; → (fn [f#] (setup) (f#))
 (after (tear-down))                    ; → (fn [f#] (f#) (tear-down))
 (before-and-after (setup) (tear-down)) ; → (fn [f#] (setup) (f#) (tear-down))
@@ -11,23 +11,81 @@
 (around binding [*x* 1])               ; → (fn [f#] (binding [*x* 1] (f#)))
 (with x 1)                             ; → (fn [f#]
                                        ;     (declare x)
-                                       ;     (with-redefs [x 1] (f#)))
-</code></pre><h3><code>with-fixtures</code></h3><p>The <code>with-fixtures</code> macro can be use to execute some body of code with a sequence of fixtures.</p>
-<pre><code class="clojure">(require &#39;[clojure.test :refer [is]])
+                                       ;     (with-redefs [x (delay 1)] (f#)))
+</code></pre><h3><a class="incise-generated-tag" name="with-fixtures" href="#with-fixtures"></a><code>with-fixtures</code></h3><p>The <code>with-fixtures</code> macro can be use to execute some body of code with a sequence of fixtures.</p>
+<pre><code class="clojure">(require '[clojure.test :refer [is]])
 (with-fixtures [(before (setup))
                 (with conn (connect-to-db))
                 (with x 1)]
   (do-something conn x)
   (with-fixtures [(with x 2)]
-    (is (= x 2)))
-  (is (= x 1)))
-</code></pre><p>There is also a function version, <code>with-fixtures-fn</code>.</p><h3><code>deftest-fx</code> &amp; <code>testing-fn</code></h3><p><em>fixtures</em> defines <code>deftest-fx</code> and `testing-fn</p>
+    (is (= @x 2)))
+  (is (= @x 1)))
+</code></pre><p>There is also a function version, <code>with-fixtures-fn</code>.</p><h3><a class="incise-generated-tag" name="deftest-fx-&amp;-testing-fn" href="#deftest-fx-&amp;-testing-fn"></a><code>deftest-fx</code> &amp; <code>testing-fn</code></h3><p><em>fixtures</em> defines <code>deftest-fx</code> and `testing-fn</p>
 <pre><code class="clojure">(defn connect-to-db [] ...)
 (defn dissconnect-from-db [] ...)
 (deftest-fx test-user-creation [(before-and-after (connect-to-db)
                                                   (dissconnect-from-db))]
   ...)
-</code></pre><p>They use <code>with-fixtures</code> internally and are just a bit of sugar.</p><h2>License</h2><p>Copyright © 2014 Ryan V McGowan</p><p>Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.</p></article></div><footer><div class="content"><p id="credit">This website was <a href="https://github.com/RyanMcG/incise">incised</a>.</p></div><script type="text/javascript">//<![CDATA[
+</code></pre><p>They use <code>with-fixtures</code> internally and are just a bit of sugar.</p><h2><a class="incise-generated-tag" name="fixturex.context" href="#fixturex.context"></a><code>fixturex.context</code></h2><p>This namespace supports dynamic binding like in RSpec. It accomplishes this by providing some functions which merge bindings onto a dynamic var (<code>*context*</code>) and by rewriting forms. Some totally ridiculous examples follow.</p>
+<pre><code class="clojure">(require [fixturex.context :refer :all])
+</code></pre><h3><a class="incise-generated-tag" name="with-context" href="#with-context"></a><code>with-context</code></h3><p>This macro merges the given bindings onto the context and rewrites the body so symbols that match keys in the context are lookups.</p>
+<pre><code class="clojure">(with-context [:foo 1
+               :bar (inc foo)]
+  (assert (= bar 2)))
+</code></pre><p>In RSpec this looks like:</p>
+<pre><code class="ruby">context do
+  let(:foo) { 1 }
+  let(:bar) { 2 }
+
+  it { expect(bar).to eq(2) }
+end
+</code></pre><h4><a class="incise-generated-tag" name="testing-ctx" href="#testing-ctx"></a><code>testing-ctx</code></h4><p>This is just a shortcut for combining <code>clojure.test/testing</code> and <code>with-context</code>.</p>
+<pre><code class="clojure">(testing-ctx "description of context" [...bindings...]
+  ...)
+
+(testing "description of context"
+  (with-context [...bindings...]
+    ...))
+</code></pre><h4><a class="incise-generated-tag" name="deftest-ctx" href="#deftest-ctx"></a><code>deftest-ctx</code></h4><p>This is just a shortcut for combining <code>clojure.test/deftest</code> and <code>with-context</code>.</p>
+<pre><code class="clojure">(deftest-ctx test-something [...bindings...]
+  ...)
+
+(deftest test-something
+  (with-context [...bindings...]
+    ...))
+</code></pre><h3><a class="incise-generated-tag" name="where" href="#where"></a><code>where</code></h3><p>Creates a fixture that adds bindings to the context.</p>
+<pre><code class="clojure">(require '[fixturex.core :refer [with-fixtures]])
+(def a-fixture (where :foo 2))
+(with-context [:foo 1]
+  (assert (= foo 1))
+  (with-fixtures [a-fixture]
+    (assert (= foo 2))))
+</code></pre><h3><a class="incise-generated-tag" name="$,-lookup,-and-scoped" href="#$,-lookup,-and-scoped"></a><code>$</code>, <code>lookup</code>, and <code>scoped</code></h3><p>Functions which lookup in the context can be defined outside of where the context is defined. There are several methods to lookup.</p>
+<pre><code class="clojure">(defn bar-is-one [] (scoped [bar] (assert (= bar 1))))
+(defn foo-is-two [] (assert (= ($ foo) 2)))
+(defn lol-is-three [] (assert (= (lookup :lol) 3)))
+
+(with-context [:bar 1
+               :foo 2
+               :lol 3]
+  (bar-is-one)
+  (foo-is-two)
+  (lol-is-three))
+</code></pre><h2><a class="incise-generated-tag" name="a-note-on-fixtures" href="#a-note-on-fixtures"></a>A note on fixtures</h2><p><em>fixturex</em> uses the same mechanism for combining fixtures that <code>clojure.test</code> does. This means that <strong>you</strong> <em>must be</em> <strong>careful</strong>. It is easy to write a bad fixture and next to impossible to tell if a fixture does not do what the author intended. Take the following example:</p>
+<pre><code class="clojure">(require '[clojure.test :refer [is]])
+(require '[fixturex.core :refer [with-fixtures]])
+
+(with-fixtures []
+  (is (= 1 2))) ; → false
+</code></pre><p>This prints:</p>
+<pre><code>FAIL in ...
+expected: (= 1 2)
+actual: (not (= 1 2))
+</code></pre><p>However, if we pass in a fixture which does not invoke its argument:</p>
+<pre><code class="clojure">(with-fixtures [(fn bad-fx [f] :derp)]
+  (is (= 1 2))) ; → :derp
+</code></pre><p>Nothing is printed.</p><p>If you have something like this in tests it may appear that certain tests are passing when in fact they are not being invoked.</p><h2><a class="incise-generated-tag" name="license" href="#license"></a>License</h2><p>Copyright © 2014 Ryan V McGowan</p><p>Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.</p></article></div><footer><div class="content"><p id="credit">This website was <a href="https://github.com/RyanMcG/incise">incised</a>.</p></div><script type="text/javascript">//<![CDATA[
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-47124253-1', 'ryanmcg.com');

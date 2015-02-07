@@ -33,6 +33,21 @@
   [& body]
   `(fn [f#] (~@body (f#))))
 
+(defmacro wrap
+  "Like around but assumes the second argument is a vector (e.g. bindings)."
+  [name & bindings]
+  `(around ~name ~(vec bindings)))
+
+(defmacro redefs
+  "This is sugar for creating a fixture that redefines vars (via
+  `with-redefs`).
+
+    ; These are the same
+    `(around with-redefs [bind ing])`
+    `(redefs bind ing)`."
+  [& bindings]
+  `(wrap with-redefs ~@bindings))
+
 (defmacro with
   "Create a fixture which sets the value of a var with the name of the given
   symbol to a delay on the given expression."

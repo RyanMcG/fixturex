@@ -30,11 +30,18 @@
     (is (= @counter 0))))
 
 (declare ^:dynamic *awesome*)
+
+(def some-number 1)
+
 (deftest test-around
   (with-fixtures [(around binding [*awesome* :yeah!])]
     (is (bound? #'*awesome*))
     (is (= *awesome* :yeah!)))
-  (is (not (bound? #'*awesome*))))
+  (is (not (bound? #'*awesome*)))
+  (testing "sanity" (is (= some-number 1)))
+  (testing "with-redefs"
+    (with-fixtures [(around with-redefs [some-number 2])]
+      (is (= some-number 2)))))
 
 (deftest test-with
   (with-fixtures [(with y 3)]
@@ -42,3 +49,19 @@
     (with-fixtures [(with y identity)]
       (is (not= @y 3))
       (is (= @y identity)))))
+
+(declare a)
+(declare b)
+(deftest test-redefs
+  (letfn [(same-expansion [a b]
+            (is (= (macroexpand a)
+                   (macroexpand b))))]
+    (testing "zero bindings"
+      (same-expansion `(redefs)
+                      `(around with-redefs [])))
+    (testing "one binding"
+      (same-expansion `(redefs a 1)
+                      `(around with-redefs [a 1])))
+    (testing "multiple bindings"
+      (same-expansion `(redefs a 1 b 2)
+                      `(around with-redefs [a 1 b 2])))))

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html><head><title>fixturex - index</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css" rel="stylesheet" type="text/css"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css" rel="stylesheet" type="text/css"><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/vm/stylesheets/vm-81d1007179a88145e1baa110ea15a0c4.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/images/vm.png" rel="icon" type="image/png"></head><body id="page"><div id="content"><article><h1><a class="incise-generated-tag" name="fixturex-" href="#fixturex-"></a>fixturex <a href="https://travis-ci.org/RyanMcG/fixturex"><img _="_" alt="Build Status" src="https://travis-ci.org/RyanMcG/fixturex.svg?branch=master" /></a></h1><p>A library of helpful test fixture macros and functions for when namespace level fixtures with <code>use-fixtures</code> is not specific enough.</p>
+<html><head><title>fixturex - index</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css" rel="stylesheet" type="text/css"><link href="//yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css" rel="stylesheet" type="text/css"><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/vm/stylesheets/vm-81d1007179a88145e1baa110ea15a0c4.css" rel="stylesheet" type="text/css"><link href="/fixturex/assets/images/vm.png" rel="icon" type="image/png"></head><body id="page"><div id="content"><article><h1><a class="incise-generated-tag" name="fixturex-" href="#fixturex-"></a>fixturex <a href="https://travis-ci.org/RyanMcG/fixturex"><img _="_" alt="Build Status" src="https://travis-ci.org/RyanMcG/fixturex.svg?branch=master" /></a></h1><h6><a class="incise-generated-tag" name="a-library-of-functions-and-macros-for-using-and-creating-fixtures" href="#a-library-of-functions-and-macros-for-using-and-creating-fixtures"></a>A library of functions and macros for using and creating fixtures</h6><p>Particularly useful when for when namespace level fixtures with <code>use-fixtures</code> is not specific enough.</p>
 <pre><code class="clojure">;; Add the following to dependencies in your project.clj
-[fixturex "0.2.1"]
+[fixturex "0.3.0"]
 </code></pre><h6><a class="incise-generated-tag" name="source" href="#source"></a><a href="https://github.com/RyanMcG/fixturex"><strong>Source</strong></a></h6><h6><a class="incise-generated-tag" name="api-documentation" href="#api-documentation"></a><a href="http://www.ryanmcg.com/fixturex/api/"><strong>API Documentation</strong></a></h6><h2><a class="incise-generated-tag" name="usage" href="#usage"></a>Usage</h2><p><code>fixturex</code> is meant to make using and defining fixtures in tests just a tiny bit easier. It is a very small and simple library of tiny macros.</p><h3><a class="incise-generated-tag" name="fixturex.higher" href="#fixturex.higher"></a><code>fixturex.higher</code></h3><p>Why am I not introducing the core namespace first? <code>fixturex.higher</code> makes it a bit more concise to define fixtures which is necessary to show off the core part of this library.</p>
 <pre><code class="clojure">(use 'fixturex.higher)
 (before (setup))                       ; → (fn [f#] (setup) (f#))
@@ -9,6 +9,8 @@
 (before-and-after (setup) (tear-down)) ; → (fn [f#] (setup) (f#) (tear-down))
 (declare ^:dynamic *x*)
 (around binding [*x* 1])               ; → (fn [f#] (binding [*x* 1] (f#)))
+(wrap binding *x* 1)                   ; → (fn [f#] (binding [*x* 1] (f#)))
+(redefs x 1)                           ; → (fn [f#] (with-redefs [x 1] (f#)))
 (with x 1)                             ; → (fn [f#]
                                        ;     (declare x)
                                        ;     (with-redefs [x (delay 1)] (f#)))
@@ -21,7 +23,7 @@
   (with-fixtures [(with x 2)]
     (is (= @x 2)))
   (is (= @x 1)))
-</code></pre><p>There is also a function version, <code>with-fixtures-fn</code>.</p><h3><a class="incise-generated-tag" name="deftest-fx-&amp;-testing-fn" href="#deftest-fx-&amp;-testing-fn"></a><code>deftest-fx</code> &amp; <code>testing-fn</code></h3><p><em>fixtures</em> defines <code>deftest-fx</code> and `testing-fn</p>
+</code></pre><p>There is also a function version, <code>with-fixtures-fn</code>.</p><h3><a class="incise-generated-tag" name="deftest-fx-&amp;-testing-fn" href="#deftest-fx-&amp;-testing-fn"></a><code>deftest-fx</code> &amp; <code>testing-fn</code></h3><p><em>fixtures</em> defines <code>deftest-fx</code> and <code>testing-fn</code>.</p>
 <pre><code class="clojure">(defn connect-to-db [] ...)
 (defn dissconnect-from-db [] ...)
 (deftest-fx test-user-creation [(before-and-after (connect-to-db)

@@ -1,7 +1,7 @@
 # fixturex [![Build Status](https://travis-ci.org/RyanMcG/fixturex.svg?branch=master)](https://travis-ci.org/RyanMcG/fixturex)
+###### A library of functions and macros for using and creating fixtures
 
-A library of helpful test fixture macros and functions for when namespace level
-fixtures with `use-fixtures` is not specific enough.
+Particularly useful when for when namespace level fixtures with `use-fixtures` is not specific enough.
 
 ```clojure
 ;; Add the following to dependencies in your project.clj
@@ -28,6 +28,8 @@ Why am I not introducing the core namespace first?
 (before-and-after (setup) (tear-down)) ; → (fn [f#] (setup) (f#) (tear-down))
 (declare ^:dynamic *x*)
 (around binding [*x* 1])               ; → (fn [f#] (binding [*x* 1] (f#)))
+(wrap binding *x* 1)                   ; → (fn [f#] (binding [*x* 1] (f#)))
+(redefs x 1)                           ; → (fn [f#] (with-redefs [x 1] (f#)))
 (with x 1)                             ; → (fn [f#]
                                        ;     (declare x)
                                        ;     (with-redefs [x (delay 1)] (f#)))
@@ -52,7 +54,7 @@ There is also a function version, `with-fixtures-fn`.
 
 ### `deftest-fx` &amp; `testing-fn`
 
-*fixtures* defines `deftest-fx` and `testing-fn
+*fixtures* defines `deftest-fx` and `testing-fn`.
 
 ```clojure
 (defn connect-to-db [] ...)

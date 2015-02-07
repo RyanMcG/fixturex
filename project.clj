@@ -10,7 +10,7 @@
   :profiles {:dev {:dependencies [[incise "0.5.0"]
                                   [com.ryanmcg/incise-codox "0.1.0"]
                                   [com.ryanmcg/incise-vm-layout "0.5.0"]]
-                   :plugins [[lein-repack "0.2.4"]]
+                   :plugins [[lein-repack "0.2.7"]]
                    :aliases {"incise" ^:pass-through-help ["run" "-m" "incise.core"]}}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}

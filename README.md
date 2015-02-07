@@ -1,7 +1,7 @@
 # fixturex [![Build Status](https://travis-ci.org/RyanMcG/fixturex.svg?branch=master)](https://travis-ci.org/RyanMcG/fixturex)
 ###### A library of functions and macros for using and creating fixtures
 
-Particularly useful when for when namespace level fixtures with `use-fixtures` is not specific enough.
+Particularly useful for when namespace level fixtures with `use-fixtures` is not specific enough.
 
 ```clojure
 ;; Add the following to dependencies in your project.clj

@@ -9,6 +9,7 @@
             :path "src"}]
   :scm {:name "git"
         :url "https://github.com/RyanMcG/fixturex"}
+  :deploy-repositories [["releases" :clojars]]
   :profiles {:dev {:dependencies [[incise "0.5.0"]
                                   [com.ryanmcg/incise-codox "0.1.0"]
                                   [com.ryanmcg/incise-vm-layout "0.5.0"]]

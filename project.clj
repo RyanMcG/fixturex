@@ -1,4 +1,4 @@
-(defproject fixturex/fixturex "0.3.2-SNAPSHOT"
+(defproject fixturex/fixturex "0.3.2-alpha3"
   :description "A library of helpful test fixture macros and functions."
   :url "http://www.ryanmcg.com/fixturex/"
   :license {:name "Eclipse Public License"
@@ -7,6 +7,11 @@
   :repack [{:type :clojure
             :levels 1
             :path "src"}]
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]
+                  ["repack" "split"]]
   :scm {:name "git"
         :url "https://github.com/RyanMcG/fixturex"}
   :deploy-repositories [["snapshots" :clojars]

@@ -1,4 +1,4 @@
-(defproject fixturex/fixturex "0.3.1"
+(defproject fixturex/fixturex "0.3.2-SNAPSHOT"
   :description "A library of helpful test fixture macros and functions."
   :url "http://www.ryanmcg.com/fixturex/"
   :license {:name "Eclipse Public License"

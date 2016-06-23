@@ -5,7 +5,7 @@ Particularly useful for when namespace level fixtures with `use-fixtures` is not
 
 ```clojure
 ;; Add the following to dependencies in your project.clj
-[fixturex "0.3.0"]
+[fixturex "0.3.1"]
 ```
 
 ###### [**Source**](https://github.com/RyanMcG/fixturex)
